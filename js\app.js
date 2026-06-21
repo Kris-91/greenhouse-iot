@@ -4,10 +4,17 @@ let simulator, dashboard, monitor, control, alertEngine;
   'use strict';
   simulator=new Simulator(ZONES);
   Store.init();
-  dashboard=new Dashboard();
-  monitor=new Monitor();
-  control=new Control();
-  alertEngine=new AlertEngine();
+  // 注意：Dashboard/Monitor/Control/AlertEngine 是普通对象，不是类，不能加 new
+  dashboard = Dashboard;
+  monitor = Monitor;
+  control = Control;
+  alertEngine = AlertEngine;
+  
+  dashboard.init(simulator);
+  monitor.init(simulator);
+  control.init();
+  alertEngine.init();
+  
   // 标签切换
   document.querySelector('.tab-bar').addEventListener('click',e=>{
     const btn=e.target.closest('.tab-btn');
@@ -24,10 +31,6 @@ let simulator, dashboard, monitor, control, alertEngine;
     document.getElementById('clock').textContent=d.toLocaleTimeString();
   },1000);
   // 数据循环
-  dashboard.init(simulator);
-  monitor.init(simulator);
-  control.init();
-  alertEngine.init();
   setInterval(()=>{
     simulator.tick();
     const snap=simulator.getSnapshot();
